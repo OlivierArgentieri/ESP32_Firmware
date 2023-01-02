@@ -52,3 +52,20 @@ void WebInterface::CreateWebUI(String& outContent)
   outContent += "</p>";
   outContent += "</html>";
 }
+
+void WebInterface::GetAvailableNetworks(std::vector<WMNetwork>& outNetworks)
+{
+  outNetworks.clear();
+
+  int n = WiFi.scanNetworks();
+  for (int i = 0; i < n; ++i) {
+    WMNetwork net;
+    net.ssid = WiFi.SSID(i);
+    net.rssi = WiFi.RSSI(i);
+    net.open = WiFi.encryptionType(i) == WIFI_AUTH_OPEN;
+
+    outNetworks.push_back(net);
+  }
+}
+
+

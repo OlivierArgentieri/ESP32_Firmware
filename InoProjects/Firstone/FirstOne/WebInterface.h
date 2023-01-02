@@ -1,3 +1,5 @@
+#include "WMNetwork.h"
+#include <vector>
 
 class String;
 class HardwareSerial;
@@ -20,7 +22,10 @@ class WebInterface
     
     /** Construct web interface */
     void CreateWebUI(String& outContent);
-  
+
+    /** Get list of available networks */
+    void GetAvailableNetworks(std::vector<WMNetwork>& outNetworks);
+    
   private:
     /**
     * private property 
