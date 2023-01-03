@@ -13,14 +13,14 @@ void setup()
     WiFi.disconnect();
     delay(100);
     WiFi.softAP("AAAA", "");
- 
+    
+    WebInterface::GetInstance()->StartListening(Serial);
+    
     Serial.println("Setup done");
 }
  
 void loop()
 {
-    WebInterface::GetInstance()->StartListening(Serial);
-    Serial.println(WiFi.softAPIP());
     // WiFi.scanNetworks will return the number of networks found
     // int n = WiFi.scanNetworks();
     // Serial.println("scan done");

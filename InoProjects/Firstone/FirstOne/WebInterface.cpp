@@ -24,20 +24,19 @@ void WebInterface::StartListening(HardwareSerial& Serial)
 
   Serial.print("AAAA");
   static WebServer server(80);
-  server.handleClient();
   {
     server.on("/", [&]() 
     {
       IPAddress ip = WiFi.softAPIP();
-      Serial.print("Local IP: ");
-      Serial.println(WiFi.localIP());
       Serial.print("SoftAP IP: ");
       Serial.println(WiFi.softAPIP());
       server.send(200, "text/html", content);
     });
+    
   }
 
-  server.begin();  
+  server.handleClient();
+  server.begin(); 
 }
 
 /**
@@ -50,6 +49,23 @@ void WebInterface::CreateWebUI(String& outContent)
   outContent += "<p>";
   outContent += "Test test test";
   outContent += "</p>";
+  
+  // Get available networks
+  std::vector<WMNetwork> availableNetworks;
+  GetAvailableNetworks(availableNetworks);
+  for(const WMNetwork& network : availableNetworks)
+  {
+    outContent += "<p>";  
+    outContent += "Network: " + network.ssid;
+    outContent += "Rssi: " + network.rssi;
+    outContent += "Open: " + network.open ? "Yes" : "No";
+    outContent += "</p>";    
+  }
+  
+  outContent += "<p>";
+  outContent += "Test test test";
+  outContent += "</p>";
+  
   outContent += "</html>";
 }
 
