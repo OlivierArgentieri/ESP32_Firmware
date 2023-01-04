@@ -15,7 +15,6 @@ void WebInterface::Setup(HardwareSerial& Serial)
   {
     this->server->on("/", [&]() 
     {
-
       String content;
       CreateWebUI(content);      
       IPAddress ip = WiFi.softAPIP();
@@ -45,19 +44,50 @@ void WebInterface::CreateWebUI(String& outContent)
   outContent += "<p>";
   outContent += "Test test test";
   outContent += "</p>";
+
+  
+  outContent += "<table>";
+  outContent += "<tr>";
+  outContent += "<th> SSID </th>";
+  outContent += "<th> RSSI </th>";
+  outContent += "<th> OPEN </th>";
+  outContent += "<th> Action </th>";
+  outContent += "</tr>";
+
+  outContent += "</td>";
+  
   
   // Get available networks
   std::vector<WMNetwork> availableNetworks;
   GetAvailableNetworks(availableNetworks);
   for(const WMNetwork& network : availableNetworks)
   {
-    outContent += "<p>";  
-    outContent += "Network: " + network.ssid;
-    outContent += "Rssi: " + network.rssi;
-    outContent += "Open: " + network.open ? "Yes" : "No";
-    outContent += "</p>";    
+    outContent += "<tr>";
+
+    outContent += "<td>";
+    outContent += network.ssid;
+    outContent += "</td>";
+    
+    outContent += "<td>";
+    outContent += network.rssi;
+    outContent += "</td>";
+
+    outContent += "<td>";
+    outContent += network.open ? "Yes" : "No";
+    outContent += "</td>";
+    
+    outContent += "<td>";
+    outContent += "<button> Connect </button>";
+    if (!network.open) outContent += "<input type='text' placeholder='password'/>";
+    outContent += "</td>";
+
+
+    outContent += "</tr>";
   }
   
+  
+  outContent += "</table>";
+
   outContent += "<p>";
   outContent += "Test test test";
   outContent += "</p>";
