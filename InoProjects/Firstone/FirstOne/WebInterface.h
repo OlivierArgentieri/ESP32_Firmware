@@ -3,6 +3,7 @@
 
 class String;
 class HardwareSerial;
+class WebServer;
 class WebInterface
 {
   public:
@@ -15,6 +16,9 @@ class WebInterface
 
     /** Server Listen */
     void StartListening(HardwareSerial& Serial);
+
+    /** Server Setup */
+    void Setup(HardwareSerial& Serial);
   private:
     /**
     * Private Methods
@@ -31,4 +35,15 @@ class WebInterface
     * private property 
     */
     static WebInterface* instance;
+    static WebServer* server;
 };
+
+inline WebInterface* WebInterface::GetInstance()
+{
+  if(!instance)
+  {
+    instance = new WebInterface();
+  }
+  return instance;
+}
+

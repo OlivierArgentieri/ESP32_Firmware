@@ -2,41 +2,37 @@
 #include <WebServer.h>
 #include <Wifi.h>
 WebInterface* WebInterface::instance = nullptr;
+WebServer* WebInterface::server = nullptr;
 
 /**
 * Public Methods
 */
 
-WebInterface* WebInterface::GetInstance()
+void WebInterface::Setup(HardwareSerial& Serial)
 {
-  if(!instance)
+  this->server = new WebServer(80);
+
   {
-    instance = new WebInterface();
-    return instance;
-  }
-}
-
-
-void WebInterface::StartListening(HardwareSerial& Serial)
-{
-  String content;
-  CreateWebUI(content);
-
-  Serial.print("AAAA");
-  static WebServer server(80);
-  {
-    server.on("/", [&]() 
+    this->server->on("/", [&]() 
     {
+
+      String content;
+      CreateWebUI(content);      
       IPAddress ip = WiFi.softAPIP();
       Serial.print("SoftAP IP: ");
       Serial.println(WiFi.softAPIP());
-      server.send(200, "text/html", content);
+      this->server->send(200, "text/html", content);
     });
-    
   }
+  
+  this->server->begin(); 
+}
 
-  server.handleClient();
-  server.begin(); 
+void WebInterface::StartListening(HardwareSerial& Serial)
+{
+
+  Serial.print("AAAA");
+  this->server->handleClient();
 }
 
 /**
