@@ -1,8 +1,10 @@
 #include "WebInterface.h"
 #include <WebServer.h>
 #include <Wifi.h>
+#include <ESPAsyncWebServer.h>
+
 WebInterface* WebInterface::instance = nullptr;
-WebServer* WebInterface::server = nullptr;
+AsyncWebServer* WebInterface::server = nullptr;
 
 /**
 * Public Methods
@@ -10,28 +12,41 @@ WebServer* WebInterface::server = nullptr;
 
 void WebInterface::Setup(HardwareSerial& Serial)
 {
-  this->server = new WebServer(80);
+  this->server = new AsyncWebServer(80);
 
   {
-    this->server->on("/", [&]() 
+    this->server->on("/", HTTP_GET, [&](AsyncWebServerRequest *request) 
     {
       String content;
       CreateWebUI(content);      
       IPAddress ip = WiFi.softAPIP();
       Serial.print("SoftAP IP: ");
       Serial.println(WiFi.softAPIP());
-      this->server->send(200, "text/html", content);
+      request->send(200, "text/html", content);
+    });
+
+     this->server->on("/connect", HTTP_POST, [&](AsyncWebServerRequest *request) 
+    {
+      IPAddress ip = WiFi.softAPIP();
+      Serial.print("PARAM: ");
+    
+      Serial.println("CLEAR");
+      ClearEEPROM();
+      Serial.println("OK CLEAR");
+
+      auto a = request->params();
+      Serial.println(a);
+    
+      //WriteToEEPROM(, 0);
+      Serial.print("OK WRITE SSID");
+      //WriteToEEPROM(request->getParam("password")->value(), 0);
+      Serial.print("OK WRITE PASS");
+
+      request->send(200, "text/html", "OK");
     });
   }
-  
+
   this->server->begin(); 
-}
-
-void WebInterface::StartListening(HardwareSerial& Serial)
-{
-
-  Serial.print("AAAA");
-  this->server->handleClient();
 }
 
 /**
@@ -40,12 +55,8 @@ void WebInterface::StartListening(HardwareSerial& Serial)
 
 void WebInterface::CreateWebUI(String& outContent)
 {
-  outContent = "<!DOCTYPE HTML>\r\n<html>Welcome to Wifi Credentials Update page";
-  outContent += "<p>";
-  outContent += "Test test test";
-  outContent += "</p>";
+  outContent = "<!DOCTYPE HTML>\r\n<html>Wifi Credentials Update page";
 
-  
   outContent += "<table>";
   outContent += "<tr>";
   outContent += "<th> SSID </th>";
@@ -77,21 +88,19 @@ void WebInterface::CreateWebUI(String& outContent)
     outContent += "</td>";
     
     outContent += "<td>";
-    outContent += "<button> Connect </button>";
-    if (!network.open) outContent += "<input type='text' placeholder='password'/>";
+    outContent += "<form action='/connect' method='post'>";
+    
+    if (!network.open) outContent += "<input type='text' name='password' placeholder='password'>";
+    outContent += "<input type='text' name='ssid' value='" + network.ssid + "'>";
+    outContent += "<input type='submit' value='Connect'>";
+    outContent += "</form>";
+
     outContent += "</td>";
-
-
     outContent += "</tr>";
   }
-  
-  
+
   outContent += "</table>";
 
-  outContent += "<p>";
-  outContent += "Test test test";
-  outContent += "</p>";
-  
   outContent += "</html>";
 }
 
@@ -109,5 +118,4 @@ void WebInterface::GetAvailableNetworks(std::vector<WMNetwork>& outNetworks)
     outNetworks.push_back(net);
   }
 }
-
 

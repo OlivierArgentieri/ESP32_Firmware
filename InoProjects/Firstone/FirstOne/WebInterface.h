@@ -1,9 +1,11 @@
 #include "WMNetwork.h"
 #include <vector>
+#include <EEPROM.h>
 
 class String;
 class HardwareSerial;
-class WebServer;
+class AsyncWebServer;
+
 class WebInterface
 {
   public:
@@ -13,9 +15,6 @@ class WebInterface
 
     /** Get Instance */
     static WebInterface* GetInstance();
-
-    /** Server Listen */
-    void StartListening(HardwareSerial& Serial);
 
     /** Server Setup */
     void Setup(HardwareSerial& Serial);
@@ -30,12 +29,17 @@ class WebInterface
     /** Get list of available networks */
     void GetAvailableNetworks(std::vector<WMNetwork>& outNetworks);
     
+    /** Clear EEPROM */
+    void ClearEEPROM();
+
+    /** Save to EEPROM */
+   void WriteToEEPROM(const String& value, int padding);
   private:
     /**
     * private property 
     */
     static WebInterface* instance;
-    static WebServer* server;
+    static AsyncWebServer* server;
 };
 
 inline WebInterface* WebInterface::GetInstance()
@@ -47,3 +51,16 @@ inline WebInterface* WebInterface::GetInstance()
   return instance;
 }
 
+inline void WebInterface::ClearEEPROM()
+{
+  for (int i = 0; i < 96; ++i) {
+    EEPROM.write(i, 0);
+  }
+}
+
+inline void WebInterface::WriteToEEPROM(const String& value, int padding)
+{
+  const int len = value.length();
+  for (int i = 0; i < len; ++i)
+    EEPROM.write(padding + i, value[i]);
+}

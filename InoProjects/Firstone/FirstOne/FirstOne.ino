@@ -4,7 +4,6 @@
  */
 #include "WiFi.h"
 #include "WebInterface.h"
-
 void setup()
 {
     Serial.begin(115200);
@@ -20,6 +19,4 @@ void setup()
  
 void loop()
 {
-  WebInterface::GetInstance()->StartListening(Serial);
-
 }
