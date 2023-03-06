@@ -19,4 +19,5 @@ void setup()
  
 void loop()
 {
+  WebInterface::GetInstance()->Handler(Serial);
 }

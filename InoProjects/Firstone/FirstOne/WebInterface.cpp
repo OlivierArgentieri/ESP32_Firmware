@@ -12,8 +12,9 @@ AsyncWebServer* WebInterface::server = nullptr;
 
 void WebInterface::Setup(HardwareSerial& Serial)
 {
+  // Scan once
+  this->Scan();
   this->server = new AsyncWebServer(80);
-
   {
     this->server->on("/", HTTP_GET, [&](AsyncWebServerRequest *request) 
     {
@@ -25,30 +26,43 @@ void WebInterface::Setup(HardwareSerial& Serial)
       request->send(200, "text/html", content);
     });
 
-     this->server->on("/connect", HTTP_POST, [&](AsyncWebServerRequest *request) 
-    {
-      IPAddress ip = WiFi.softAPIP();
-      Serial.print("PARAM: ");
+    // this->server->on("/connect", HTTP_POST, [&](AsyncWebServerRequest *request) 
+    // {
+    //   IPAddress ip = WiFi.softAPIP();
+    //   Serial.print("PARAM: ");
     
-      Serial.println("CLEAR");
-      ClearEEPROM();
-      Serial.println("OK CLEAR");
+    //   Serial.println("CLEAR");
+    //   ClearEEPROM();
+    //   Serial.println("OK CLEAR");
 
-      auto a = request->params();
-      Serial.println(a);
+    //   auto a = request->params();
+    //   Serial.println(a);
     
-      //WriteToEEPROM(, 0);
-      Serial.print("OK WRITE SSID");
-      //WriteToEEPROM(request->getParam("password")->value(), 0);
-      Serial.print("OK WRITE PASS");
+    //   //WriteToEEPROM(, 0);
+    //   Serial.print("OK WRITE SSID");
+    //   //WriteToEEPROM(request->getParam("password")->value(), 0);
+    //   Serial.print("OK WRITE PASS");
 
-      request->send(200, "text/html", "OK");
-    });
+    //   request->send(200, "text/html", "OK");
+    // });
   }
 
   this->server->begin(); 
 }
 
+
+void WebInterface::Handler(HardwareSerial& Serial)
+{
+    if (currentStatuts == HandlerAction::NONE)
+      return;  
+
+    if (currentStatuts == HandlerAction::LISTNETWORKS)
+    {
+    String aa;
+      CreateWebUI(aa);
+      
+    }
+}
 /**
 * Private Methods
 */
@@ -69,14 +83,14 @@ void WebInterface::CreateWebUI(String& outContent)
   
   
   // Get available networks
-  std::vector<WMNetwork> availableNetworks;
-  GetAvailableNetworks(availableNetworks);
-  for(const WMNetwork& network : availableNetworks)
+  //std::vector<WMNetwork> availableNetworks;
+  //GetAvailableNetworks(availableNetworks);
+  for (const WMNetwork& network: this->networksScanned)
   {
     outContent += "<tr>";
 
     outContent += "<td>";
-    outContent += network.ssid;
+    outContent += network.ssid; 
     outContent += "</td>";
     
     outContent += "<td>";
@@ -104,18 +118,18 @@ void WebInterface::CreateWebUI(String& outContent)
   outContent += "</html>";
 }
 
-void WebInterface::GetAvailableNetworks(std::vector<WMNetwork>& outNetworks)
-{
-  outNetworks.clear();
+// void WebInterface::GetAvailableNetworks(std::vector<WMNetwork>& outNetworks)
+// {
+//   outNetworks.clear();
 
-  int n = WiFi.scanNetworks();
-  for (int i = 0; i < n; ++i) {
-    WMNetwork net;
-    net.ssid = WiFi.SSID(i);
-    net.rssi = WiFi.RSSI(i);
-    net.open = WiFi.encryptionType(i) == WIFI_AUTH_OPEN;
+//   int n = WiFi.scanNetworks();
+//   for (int i = 0; i < n; ++i) {
+//     WMNetwork net;
+//     net.ssid = WiFi.SSID(i);
+//     net.rssi = WiFi.RSSI(i);
+//     net.open = WiFi.encryptionType(i) == WIFI_AUTH_OPEN;
 
-    outNetworks.push_back(net);
-  }
-}
+//     outNetworks.push_back(net);
+//   }
+// }
 
