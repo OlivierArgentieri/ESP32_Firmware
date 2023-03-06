@@ -1,7 +1,6 @@
 #include "WMNetwork.h"
 #include <vector>
 #include <EEPROM.h>
-#include <Wifi.h>
 class String;
 class HardwareSerial;
 class AsyncWebServer;
@@ -46,7 +45,9 @@ class WebInterface
     /** Save to EEPROM */
    void WriteToEEPROM(const String& value, int padding);
    
-   void Scan(bool force);
+   /** Save to static scan network method */
+   void Scan(bool force = false);
+
   private:
     /**
     * private property 
@@ -78,21 +79,4 @@ inline void WebInterface::WriteToEEPROM(const String& value, int padding)
   const int len = value.length();
   for (int i = 0; i < len; ++i)
     EEPROM.write(padding + i, value[i]);
-}
-
-inline void WebInterface::Scan(bool force = false)
-{
-  if (!force && this->networksScanned.size() > 0)
-    return;
-  this->networksScanned.empty();
-
-  int n = WiFi.scanNetworks();
-  for (int i = 0; i < n; ++i)
-  {
-    WMNetwork network;
-    network.ssid = WiFi.SSID(i);
-    network.rssi = WiFi.RSSI(i);
-    network.open = WiFi.encryptionType(i) == WIFI_AUTH_OPEN;
-    networksScanned.push_back(network);
-  }
 }

@@ -13,7 +13,9 @@ AsyncWebServer* WebInterface::server = nullptr;
 void WebInterface::Setup(HardwareSerial& Serial)
 {
   // Scan once
-  this->Scan();
+  Scan();
+
+  // Serve
   this->server = new AsyncWebServer(80);
   {
     this->server->on("/", HTTP_GET, [&](AsyncWebServerRequest *request) 
@@ -24,6 +26,12 @@ void WebInterface::Setup(HardwareSerial& Serial)
       Serial.print("SoftAP IP: ");
       Serial.println(WiFi.softAPIP());
       request->send(200, "text/html", content);
+    });
+
+    this->server->on("/rescan", HTTP_GET, [&](AsyncWebServerRequest *request) 
+    {
+      Scan(true);
+      request->send(200, "text/html", "");
     });
 
     // this->server->on("/connect", HTTP_POST, [&](AsyncWebServerRequest *request) 
@@ -70,6 +78,11 @@ void WebInterface::Handler(HardwareSerial& Serial)
 void WebInterface::CreateWebUI(String& outContent)
 {
   outContent = "<!DOCTYPE HTML>\r\n<html>Wifi Credentials Update page";
+  outContent += "<div>";
+  outContent += "<a href='/rescan'>";
+  outContent += "<button>Refresh</button>";
+  outContent += "</a>";
+  outContent += "</div>";
 
   outContent += "<table>";
   outContent += "<tr>";
@@ -116,6 +129,24 @@ void WebInterface::CreateWebUI(String& outContent)
   outContent += "</table>";
 
   outContent += "</html>";
+}
+
+void WebInterface::Scan(bool force)
+{
+  if (!force && this->networksScanned.size() > 0)
+    return;
+    
+  this->networksScanned.clear();
+
+  int n = WiFi.scanNetworks();
+  for (int i = 0; i < n; ++i)
+  {
+    WMNetwork network;
+    network.ssid = WiFi.SSID(i);
+    network.rssi = WiFi.RSSI(i);
+    network.open = WiFi.encryptionType(i) == WIFI_AUTH_OPEN;
+    networksScanned.push_back(network);
+  }
 }
 
 // void WebInterface::GetAvailableNetworks(std::vector<WMNetwork>& outNetworks)
