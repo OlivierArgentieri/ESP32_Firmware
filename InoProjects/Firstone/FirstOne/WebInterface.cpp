@@ -34,25 +34,28 @@ void WebInterface::Setup(HardwareSerial& Serial)
       request->send(200, "text/html", "");
     });
 
-    // this->server->on("/connect", HTTP_POST, [&](AsyncWebServerRequest *request) 
-    // {
-    //   IPAddress ip = WiFi.softAPIP();
-    //   Serial.print("PARAM: ");
+    this->server->on("/connect", HTTP_POST, [&](AsyncWebServerRequest *request) 
+    {
+      IPAddress ip = WiFi.softAPIP();
+      Serial.print("PARAM: ");
     
-    //   Serial.println("CLEAR");
-    //   ClearEEPROM();
-    //   Serial.println("OK CLEAR");
+      Serial.println("CLEAR");
+      ClearEEPROM();
+      Serial.println("OK CLEAR");
 
-    //   auto a = request->params();
-    //   Serial.println(a);
+      auto a = request->params();
+      Serial.println(a);
     
-    //   //WriteToEEPROM(, 0);
-    //   Serial.print("OK WRITE SSID");
-    //   //WriteToEEPROM(request->getParam("password")->value(), 0);
-    //   Serial.print("OK WRITE PASS");
+      //WriteToEEPROM(String(a), 0);
+      Serial.println("OK WRITE SSID");
+      const String pass = request->getParam("password")->value();
+      Serial.println(pass);
 
-    //   request->send(200, "text/html", "OK");
-    // });
+      WriteToEEPROM(pass, 0);
+      Serial.print("OK WRITE PASS");
+
+      request->send(200, "text/html", "OK");
+    });
   }
 
   this->server->begin(); 
@@ -135,7 +138,7 @@ void WebInterface::Scan(bool force)
 {
   if (!force && this->networksScanned.size() > 0)
     return;
-    
+
   this->networksScanned.clear();
 
   int n = WiFi.scanNetworks();
@@ -149,18 +152,4 @@ void WebInterface::Scan(bool force)
   }
 }
 
-// void WebInterface::GetAvailableNetworks(std::vector<WMNetwork>& outNetworks)
-// {
-//   outNetworks.clear();
-
-//   int n = WiFi.scanNetworks();
-//   for (int i = 0; i < n; ++i) {
-//     WMNetwork net;
-//     net.ssid = WiFi.SSID(i);
-//     net.rssi = WiFi.RSSI(i);
-//     net.open = WiFi.encryptionType(i) == WIFI_AUTH_OPEN;
-
-//     outNetworks.push_back(net);
-//   }
-// }
 
