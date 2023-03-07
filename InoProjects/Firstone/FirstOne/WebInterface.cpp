@@ -47,13 +47,14 @@ void WebInterface::Setup(HardwareSerial& Serial)
       Serial.println(a);
     
       //WriteToEEPROM(String(a), 0);
-      Serial.println("OK WRITE SSID");
-      const String pass = request->getParam("password")->value();
+      const String pass = request->getParam(0)->value();
       Serial.println(pass);
-
       WriteToEEPROM(pass, 0);
       Serial.print("OK WRITE PASS");
-
+      const String ssid = request->getParam(1)->value();
+      Serial.println(ssid);
+      WriteToEEPROM(ssid, 32);
+      Serial.print("OK WRITE SSID");
       request->send(200, "text/html", "OK");
     });
   }

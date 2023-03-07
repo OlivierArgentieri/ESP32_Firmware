@@ -76,6 +76,7 @@ inline void WebInterface::ClearEEPROM()
 
 inline void WebInterface::WriteToEEPROM(const String& value, int padding)
 {
+  EEPROM.begin(512);
   const int len = value.length();
   for (int i = 0; i < len; ++i)
     EEPROM.write(padding + i, value[i]);
