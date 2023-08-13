@@ -6,15 +6,15 @@
 #include "WebInterface.h"
 void setup()
 {
-    Serial.begin(115200);
-    // Set WiFi to station mode and disconnect from an AP if it was previously connected
-    WiFi.mode(WIFI_STA);
-    WiFi.disconnect();
-    delay(100);
-    WiFi.softAP("AAAA", "");
-    
-    WebInterface::GetInstance()->Setup(Serial);
-    Serial.println("Setup done");
+  Serial.begin(115200);
+  // Set WiFi to station mode and disconnect from an AP if it was previously connected
+  WiFi.mode(WIFI_STA);
+  WiFi.disconnect();
+  delay(100);
+  WiFi.softAP("AAAAA", "");
+  
+  WebInterface::GetInstance()->Setup(Serial);
+  Serial.println("Setup done");
 }
  
 void loop()

@@ -16,9 +16,9 @@ void WebInterface::Setup(HardwareSerial& Serial)
   Scan();
 
   // Serve
-  this->server = new AsyncWebServer(80);
+  server = new AsyncWebServer(80);
   {
-    this->server->on("/", HTTP_GET, [&](AsyncWebServerRequest *request) 
+    server->on("/", HTTP_GET, [&](AsyncWebServerRequest *request) 
     {
       String content;
       CreateWebUI(content);      
@@ -28,13 +28,13 @@ void WebInterface::Setup(HardwareSerial& Serial)
       request->send(200, "text/html", content);
     });
 
-    this->server->on("/rescan", HTTP_GET, [&](AsyncWebServerRequest *request) 
+    server->on("/rescan", HTTP_GET, [&](AsyncWebServerRequest *request) 
     {
       Scan(true);
-      request->send(200, "text/html", "");
+      request->redirect("/");
     });
 
-    this->server->on("/connect", HTTP_POST, [&](AsyncWebServerRequest *request) 
+    server->on("/connect", HTTP_POST, [&](AsyncWebServerRequest *request) 
     {
       IPAddress ip = WiFi.softAPIP();
       Serial.print("PARAM: ");
