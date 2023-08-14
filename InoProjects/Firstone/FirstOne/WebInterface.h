@@ -43,10 +43,13 @@ class WebInterface
     void ClearEEPROM();
 
     /** Save to EEPROM */
-   void WriteToEEPROM(const String& value, int padding);
+    void WriteToEEPROM(const String& value, int padding);
    
-   /** Save to static scan network method */
-   void Scan(bool force = false);
+    /** Save to EEPROM */
+    void ReadFromEEPROM(String& out, int padding);
+
+    /** Save to static scan network method */
+    void Scan(bool force = false);
 
   private:
     /**
@@ -69,15 +72,32 @@ inline WebInterface* WebInterface::GetInstance()
 
 inline void WebInterface::ClearEEPROM()
 {
-  for (int i = 0; i < 96; ++i) {
+  for (int i = 0; i < 512; ++i) {
     EEPROM.write(i, 0);
   }
+  EEPROM.commit();
 }
 
 inline void WebInterface::WriteToEEPROM(const String& value, int padding)
 {
-  EEPROM.begin(512);
   const int len = value.length();
   for (int i = 0; i < len; ++i)
     EEPROM.write(padding + i, value[i]);
+  EEPROM.commit();
+}
+
+inline void WebInterface::ReadFromEEPROM(String& out, int padding)
+{
+  out = "";
+  int newStrLen = EEPROM.read(padding);
+  char data[newStrLen + 1];
+  for (int i = 0; i < newStrLen; ++i) {
+    int result = EEPROM.read(padding+i);
+    if (result == 255)
+      break;
+    data[i] = result;
+  }
+    
+  data[newStrLen] = '\0';
+  out = String(data);
 }

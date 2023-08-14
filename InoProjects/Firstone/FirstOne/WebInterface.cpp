@@ -11,7 +11,10 @@ AsyncWebServer* WebInterface::server = nullptr;
 */
 
 void WebInterface::Setup(HardwareSerial& Serial)
-{
+{ 
+  // create cspecific class for that
+  
+  EEPROM.begin(512);
   // Scan once
   Scan();
 
@@ -55,13 +58,20 @@ void WebInterface::Setup(HardwareSerial& Serial)
       Serial.println(ssid);
       WriteToEEPROM(ssid, 32);
       Serial.print("OK WRITE SSID");
+
+      String read;
+      ReadFromEEPROM(read, 32);
+      Serial.print("OK READ SSID\n");
+      Serial.print(read);
+      
+      ReadFromEEPROM(read, 0);
+      Serial.print("OK READ PASSWORD \n");
+      Serial.print(read);
       request->send(200, "text/html", "OK");
     });
   }
-
-  this->server->begin(); 
+  server->begin(); 
 }
-
 
 void WebInterface::Handler(HardwareSerial& Serial)
 {
@@ -140,7 +150,7 @@ void WebInterface::Scan(bool force)
   if (!force && this->networksScanned.size() > 0)
     return;
 
-  this->networksScanned.clear();
+  networksScanned.clear();
 
   int n = WiFi.scanNetworks();
   for (int i = 0; i < n; ++i)

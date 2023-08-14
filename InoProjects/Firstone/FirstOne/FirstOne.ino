@@ -4,6 +4,8 @@
  */
 #include "WiFi.h"
 #include "WebInterface.h"
+
+
 void setup()
 {
   Serial.begin(115200);
@@ -11,7 +13,7 @@ void setup()
   WiFi.mode(WIFI_STA);
   WiFi.disconnect();
   delay(100);
-  WiFi.softAP("AAAAA", "");
+  WiFi.softAP("AAAAAAAA", "");
   
   WebInterface::GetInstance()->Setup(Serial);
   Serial.println("Setup done");
