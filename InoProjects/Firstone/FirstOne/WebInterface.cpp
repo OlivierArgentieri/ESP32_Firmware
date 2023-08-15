@@ -50,23 +50,41 @@ void WebInterface::Setup(HardwareSerial& Serial)
       Serial.println(a);
     
       //WriteToEEPROM(String(a), 0);
-      const String pass = request->getParam(0)->value();
-      Serial.println(pass);
-      WriteToEEPROM(pass, 0);
-      Serial.print("OK WRITE PASS");
-      const String ssid = request->getParam(1)->value();
-      Serial.println(ssid);
-      WriteToEEPROM(ssid, 32);
-      Serial.print("OK WRITE SSID");
+      // const String pass = request->getParam(0)->value();
+      // Serial.println(pass);
+      // WriteToEEPROM(pass, 0);
+      // Serial.print("OK WRITE PASS");
+      // const String ssid = request->getParam(1)->value();
+      // Serial.println(ssid);
+      // WriteToEEPROM(ssid, 32);
+      // Serial.print("OK WRITE SSID");
 
-      String read;
-      ReadFromEEPROM(read, 32);
-      Serial.print("OK READ SSID\n");
-      Serial.print(read);
+      // String read;
+      // ReadFromEEPROM(read, 32);
+      // Serial.print("OK READ SSID\n");
+      // Serial.print(read);
       
-      ReadFromEEPROM(read, 0);
-      Serial.print("OK READ PASSWORD \n");
-      Serial.print(read);
+      // ReadFromEEPROM(read, 0);
+      // Serial.print("OK READ PASSWORD \n");
+      // Serial.print(read);
+      WMNetwork network_data;
+      network_data.password = request->getParam(0)->value();
+      network_data.ssid = request->getParam(1)->value();
+      
+      Serial.println(network_data.password);
+      Serial.println(network_data.ssid);
+
+
+      SaveNetworkData(network_data);
+      Serial.print("OK WRITE DATA\n");
+
+
+      WMNetwork other_network_data;
+      GetNetworkData(other_network_data);
+
+      Serial.print("OK GET DATA\n");
+      Serial.println(network_data.password);
+      Serial.println(network_data.ssid);
       request->send(200, "text/html", "OK");
     });
   }

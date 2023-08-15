@@ -28,6 +28,10 @@ class WebInterface
     /** Handle Route Behaviour */
     void Handler(HardwareSerial& Serial);
 
+    
+    void SaveNetworkData(const WMNetwork& network_data);
+    void GetNetworkData(WMNetwork& network_data);
+
   private:
     /**
     * Private Methods
@@ -44,7 +48,8 @@ class WebInterface
 
     /** Save to EEPROM */
     void WriteToEEPROM(const String& value, int padding);
-   
+
+
     /** Save to EEPROM */
     void ReadFromEEPROM(String& out, int padding);
 
@@ -86,6 +91,17 @@ inline void WebInterface::WriteToEEPROM(const String& value, int padding)
   EEPROM.commit();
 }
 
+inline void WebInterface::SaveNetworkData(const WMNetwork& network_data)
+{
+  EEPROM.put(0, network_data);
+  EEPROM.commit();
+}
+
+inline void WebInterface::GetNetworkData(WMNetwork& network_data)
+{
+  EEPROM.get(0, network_data);
+}
+
 inline void WebInterface::ReadFromEEPROM(String& out, int padding)
 {
   out = "";
@@ -93,11 +109,12 @@ inline void WebInterface::ReadFromEEPROM(String& out, int padding)
   char data[newStrLen + 1];
   for (int i = 0; i < newStrLen; ++i) {
     int result = EEPROM.read(padding+i);
+    // one byte per letters, empty letters it's valued 255
+    // so we read until the end
     if (result == 255)
       break;
     data[i] = result;
   }
-    
   data[newStrLen] = '\0';
   out = String(data);
 }
