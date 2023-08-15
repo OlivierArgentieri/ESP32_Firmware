@@ -28,10 +28,6 @@ class WebInterface
     /** Handle Route Behaviour */
     void Handler(HardwareSerial& Serial);
 
-    
-    void SaveNetworkData(const WMNetwork& network_data);
-    void GetNetworkData(WMNetwork& network_data);
-
   private:
     /**
     * Private Methods
@@ -47,11 +43,10 @@ class WebInterface
     void ClearEEPROM();
 
     /** Save to EEPROM */
-    void WriteToEEPROM(const String& value, int padding);
-
+    void SaveNetworkData(const WMNetwork& network_data);
 
     /** Save to EEPROM */
-    void ReadFromEEPROM(String& out, int padding);
+    void GetNetworkData(WMNetwork& network_data);
 
     /** Save to static scan network method */
     void Scan(bool force = false);
@@ -83,14 +78,6 @@ inline void WebInterface::ClearEEPROM()
   EEPROM.commit();
 }
 
-inline void WebInterface::WriteToEEPROM(const String& value, int padding)
-{
-  const int len = value.length();
-  for (int i = 0; i < len; ++i)
-    EEPROM.write(padding + i, value[i]);
-  EEPROM.commit();
-}
-
 inline void WebInterface::SaveNetworkData(const WMNetwork& network_data)
 {
   EEPROM.put(0, network_data);
@@ -100,21 +87,4 @@ inline void WebInterface::SaveNetworkData(const WMNetwork& network_data)
 inline void WebInterface::GetNetworkData(WMNetwork& network_data)
 {
   EEPROM.get(0, network_data);
-}
-
-inline void WebInterface::ReadFromEEPROM(String& out, int padding)
-{
-  out = "";
-  int newStrLen = EEPROM.read(padding);
-  char data[newStrLen + 1];
-  for (int i = 0; i < newStrLen; ++i) {
-    int result = EEPROM.read(padding+i);
-    // one byte per letters, empty letters it's valued 255
-    // so we read until the end
-    if (result == 255)
-      break;
-    data[i] = result;
-  }
-  data[newStrLen] = '\0';
-  out = String(data);
 }
