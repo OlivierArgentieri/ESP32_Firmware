@@ -4,7 +4,7 @@
  */
 #include "WiFi.h"
 #include "WebInterface.h"
-
+#include "Log.h"
 
 void setup()
 {
