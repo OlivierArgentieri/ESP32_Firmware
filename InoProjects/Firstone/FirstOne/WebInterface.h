@@ -16,8 +16,8 @@ class WebInterface
   };
   public:
     /**
-    * Public Methods
-    */
+     * Public Methods
+     */
 
     /** Get Instance */
     static WebInterface* GetInstance();
@@ -30,8 +30,14 @@ class WebInterface
 
   private:
     /**
-    * Private Methods
-    */
+     * Private 
+     */
+
+
+  private:
+    /**
+     * Private Methods
+     */
     
     /** Construct web interface */
     void CreateWebUI(String& outContent);
@@ -39,6 +45,9 @@ class WebInterface
     /** Get list of available networks */
     //void GetAvailableNetworks(std::vector<WMNetwork>& outNetworks);
     
+    /** Create routes */
+    void CreateRoutes();
+
     /** Clear EEPROM */
     void ClearEEPROM();
 

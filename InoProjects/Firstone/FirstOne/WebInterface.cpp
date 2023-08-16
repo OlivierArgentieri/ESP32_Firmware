@@ -12,9 +12,9 @@ AsyncWebServer* WebInterface::server = nullptr;
 
 void WebInterface::Setup(HardwareSerial& Serial)
 { 
-  // create cspecific class for that
-  
+  // create specific class for that
   EEPROM.begin(512);
+  
   // Scan once
   Scan();
 
