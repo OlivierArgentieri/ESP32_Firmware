@@ -38,7 +38,7 @@ public:
   /** Get Instance */
   // TODO defin macro for that
   static WMLog& GetInstance() {
-    static WMLog instance(Serial); // Crée l'instance une seule fois
+    static WMLog instance(Serial);
     return instance;
   }
 private:

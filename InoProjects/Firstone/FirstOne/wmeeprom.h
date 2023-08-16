@@ -10,6 +10,9 @@ class WMEEPROM {
     template<typename T>
     static void Save(const T& object, int address)
     {
+      // Clear EEPROM before writing
+      Clear();
+
       // Write object to EEPROM
       EEPROM.put(address, object);
       EEPROM.commit();
@@ -23,10 +26,15 @@ class WMEEPROM {
       EEPROM.get(address, object);
     }
 
+  private:
+    /**
+     * Private Methods
+     */
+
     /** Clear EEPROM */
     static void Clear()
     {
-      for (int i = 0; i < 512; ++i) {
+      for (int i = 0 ; i < EEPROM.length() ; i++) {
         EEPROM.write(i, 0);
       }
       EEPROM.commit();

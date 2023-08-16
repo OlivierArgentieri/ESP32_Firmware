@@ -42,23 +42,16 @@ void WebInterface::Setup(HardwareSerial& Serial)
     server->on("/connect", HTTP_POST, [&](AsyncWebServerRequest *request) 
     {
       IPAddress ip = WiFi.softAPIP();
-      Serial.print("PARAM: ");
-    
-      Serial.println("CLEAR");
-      Serial.println("OK CLEAR");
-
-//      log.Log("Trying to get data", WMLog::LogLevel::INFO);
-      LOG("Trying to get data", INFO);
+      
+      LOG_DEBUG("Trying to get data");
 
       WMNetwork network_data;
       network_data.password = request->getParam(0)->value();
       network_data.ssid = request->getParam(1)->value();
       
 
-      Serial.println(network_data.password);
-      Serial.println(network_data.ssid);
-      
-      WMEEPROM::Clear();
+      LOG_DEBUG(network_data.password);
+      LOG_DEBUG(network_data.ssid);
       WMEEPROM::Save<WMNetwork>(network_data, 0);
 
       request->send(200, "text/html", "OK");
