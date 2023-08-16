@@ -20,18 +20,16 @@ class WebInterface
      */
 
     /** Get Instance */
-    static WebInterface* GetInstance();
-
+    // TODO define macro for that
+    static WebInterface& GetInstance() {
+      static WebInterface instance(Serial);
+      return instance;
+    }
     /** Server Setup */
     void Setup(HardwareSerial& Serial);
 
     /** Handle Route Behaviour */
     void Handler(HardwareSerial& Serial);
-
-  private:
-    /**
-     * Private 
-     */
 
   private:
     /**
@@ -47,8 +45,12 @@ class WebInterface
     /** Create routes */
     void CreateRoutes();
 
-    /** Save to static scan network method */
-    void Scan(bool force = false);
+    
+  
+  private:
+    /**
+     * Private Routes
+     */
 
   private:
     /**
@@ -57,14 +59,5 @@ class WebInterface
     static WebInterface* instance;
     static AsyncWebServer* server;
     HandlerAction currentStatuts = HandlerAction::NONE;
-    std::vector<WMNetwork> networksScanned;
 };
 
-inline WebInterface* WebInterface::GetInstance()
-{
-  if(!instance)
-  {
-    instance = new WebInterface();
-  }
-  return instance;
-}

@@ -16,10 +16,8 @@ AsyncWebServer* WebInterface::server = nullptr;
 void WebInterface::Setup(HardwareSerial& Serial)
 { 
   // create specific class for that
-  EEPROM.begin(512);
   // Scan once
-  Scan();
-
+  WMNetworkComponent::GetInstance().Scan();
   // Serve
   server = new AsyncWebServer(80);
   {
@@ -131,23 +129,4 @@ void WebInterface::CreateWebUI(String& outContent)
 
   outContent += "</html>";
 }
-
-void WebInterface::Scan(bool force)
-{
-  if (!force && this->networksScanned.size() > 0)
-    return;
-
-  networksScanned.clear();
-
-  int n = WiFi.scanNetworks();
-  for (int i = 0; i < n; ++i)
-  {
-    WMNetwork network;
-    network.ssid = WiFi.SSID(i);
-    network.rssi = WiFi.RSSI(i);
-    network.open = WiFi.encryptionType(i) == WIFI_AUTH_OPEN;
-    networksScanned.push_back(network);
-  }
-}
-
 

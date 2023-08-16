@@ -4,8 +4,8 @@
  */
 #include "WiFi.h"
 #include "WebInterface.h"
-#include "wmlog.h"
-#include "wmeeprom.h"
+#include "WMLog.h"
+#include "WMEEPROM.h"
 
 void setup()
 {
@@ -16,12 +16,11 @@ void setup()
   delay(100);
   WiFi.softAP("AAAAAAAA", "");
   WebInterface::GetInstance()->Setup(Serial);
-  LOG_INFO("setup done!");
+  LOG_DEBUG("setup done!");
 
-  LOG_INFO("test");
-  WMNetwork network_data;
-  WMEEPROM::Get<WMNetwork>(network_data, 0);
-  LOG_INFO("OK GET Network DATA");
+  WMNetworkData network_data;
+  WMEEPROM::Get<WMNetworkData>(network_data, 0);
+  LOG_DEBUG("OK GET Network DATA");
   LOG_INFO(network_data.password);
   LOG_INFO(network_data.ssid);
 }
