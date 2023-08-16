@@ -1,4 +1,11 @@
 #include <WString.h>
+
+#define LOG(MSG, LVL) WMLog::GetInstance().Log(MSG, WMLog::LogLevel::LVL);
+#define LOG_INFO(MSG) WMLog::GetInstance().Log(MSG, WMLog::LogLevel::INFO);
+#define LOG_DEBUG(MSG) WMLog::GetInstance().Log(MSG, WMLog::LogLevel::DEBUG);
+#define LOG_WARNING(MSG) WMLog::GetInstance().Log(MSG, WMLog::LogLevel::WARNING);
+#define LOG_ERROR(MSG) WMLog::GetInstance().Log(MSG, WMLog::LogLevel::ERROR);
+
 class HardwareSerial;
 
 class WMLog
@@ -28,6 +35,12 @@ public:
 	/** Log */
 	void Log(const String& message, LogLevel level = LogLevel::INFO);
 
+  /** Get Instance */
+  // TODO defin macro for that
+  static WMLog& GetInstance() {
+    static WMLog instance(Serial); // Crée l'instance une seule fois
+    return instance;
+  }
 private:
   /**
    * private Property 
@@ -38,11 +51,11 @@ private:
   inline static const String logLevelColors[] =
   {
     "\033[32m", // INFO
-    "\033[34m", // DEBUG
+    "\033[0m",  // DEBUG
     "\033[33m", // WARNING
     "\033[31m", // ERROR
-  }
-
+  };
+  
   /** List matching enum value and name value */
   inline static const String logLevelnames[] =
   {
@@ -50,7 +63,7 @@ private:
     "DEBUG",
     "WARNING",
     "ERROR",
-  }
+  };
 
 private:
   /**
@@ -88,21 +101,21 @@ inline WMLog::WMLog(const HardwareSerial& Serial)
 
 inline void WMLog::Log(const String& message, LogLevel level)
 {
-	// Set color
-	serial->print(WMLog::logLevelColors[level]);
+  // Set color
+  serial->print(WMLog::logLevelColors[level]);
   
-	// Print and format message with level
-  serial->print("[");
-  serial->print(WMLog::logLevelnames[level]);
-  serial->print("] ");
-
   // Adding timestamp to message as current hours:minutes:seconds
   serial->print("[");
   serial->print(WMLog::GetTime());
   serial->print("] ");
 
+  // Print and format message with level
+  serial->print("[");
+  serial->print(WMLog::logLevelnames[level]);
+  serial->print("] ");
+
   // Print message
-  serial->print(message);
+  serial->println(message);
 
   // Reset color
   serial->print("\033[0m");

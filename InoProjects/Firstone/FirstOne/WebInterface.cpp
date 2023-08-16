@@ -2,6 +2,8 @@
 #include <WebServer.h>
 #include <Wifi.h>
 #include <ESPAsyncWebServer.h>
+#include "wmeeprom.h"
+#include "wmlog.h"
 
 WebInterface* WebInterface::instance = nullptr;
 AsyncWebServer* WebInterface::server = nullptr;
@@ -10,11 +12,11 @@ AsyncWebServer* WebInterface::server = nullptr;
 * Public Methods
 */
 
+
 void WebInterface::Setup(HardwareSerial& Serial)
 { 
   // create specific class for that
   EEPROM.begin(512);
-  
   // Scan once
   Scan();
 
@@ -43,48 +45,22 @@ void WebInterface::Setup(HardwareSerial& Serial)
       Serial.print("PARAM: ");
     
       Serial.println("CLEAR");
-      ClearEEPROM();
       Serial.println("OK CLEAR");
 
-      auto a = request->params();
-      Serial.println(a);
-    
-      //WriteToEEPROM(String(a), 0);
-      // const String pass = request->getParam(0)->value();
-      // Serial.println(pass);
-      // WriteToEEPROM(pass, 0);
-      // Serial.print("OK WRITE PASS");
-      // const String ssid = request->getParam(1)->value();
-      // Serial.println(ssid);
-      // WriteToEEPROM(ssid, 32);
-      // Serial.print("OK WRITE SSID");
+//      log.Log("Trying to get data", WMLog::LogLevel::INFO);
+      LOG("Trying to get data", INFO);
 
-      // String read;
-      // ReadFromEEPROM(read, 32);
-      // Serial.print("OK READ SSID\n");
-      // Serial.print(read);
-      
-      // ReadFromEEPROM(read, 0);
-      // Serial.print("OK READ PASSWORD \n");
-      // Serial.print(read);
       WMNetwork network_data;
       network_data.password = request->getParam(0)->value();
       network_data.ssid = request->getParam(1)->value();
       
+
       Serial.println(network_data.password);
       Serial.println(network_data.ssid);
+      
+      WMEEPROM::Clear();
+      WMEEPROM::Save<WMNetwork>(network_data, 0);
 
-
-      SaveNetworkData(network_data);
-      Serial.print("OK WRITE DATA\n");
-
-
-      WMNetwork other_network_data;
-      GetNetworkData(other_network_data);
-
-      Serial.print("OK GET DATA\n");
-      Serial.println(network_data.password);
-      Serial.println(network_data.ssid);
       request->send(200, "text/html", "OK");
     });
   }

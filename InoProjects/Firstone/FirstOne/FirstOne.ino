@@ -4,7 +4,8 @@
  */
 #include "WiFi.h"
 #include "WebInterface.h"
-#include "Log.h"
+#include "wmlog.h"
+#include "wmeeprom.h"
 
 void setup()
 {
@@ -14,14 +15,15 @@ void setup()
   WiFi.disconnect();
   delay(100);
   WiFi.softAP("AAAAAAAA", "");
-  WMNetwork other_network_data;
   WebInterface::GetInstance()->Setup(Serial);
-  Serial.println("Setup done");
-  //WebInterface::GetInstance()->GetNetworkData(other_network_data);
-  
-  // Serial.print("OK GET DATA FROM BOOT \n");
-  // Serial.println(other_network_data.password);
-  // Serial.println(other_network_data.ssid);
+  LOG_INFO("setup done!");
+
+  LOG_INFO("test");
+  WMNetwork network_data;
+  WMEEPROM::Get<WMNetwork>(network_data, 0);
+  LOG_INFO("OK GET Network DATA");
+  LOG_INFO(network_data.password);
+  LOG_INFO(network_data.ssid);
 }
  
 void loop()

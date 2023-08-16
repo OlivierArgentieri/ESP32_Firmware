@@ -1,13 +1,13 @@
 #include "WMNetwork.h"
 #include <vector>
 #include <EEPROM.h>
+
 class String;
 class HardwareSerial;
 class AsyncWebServer;
 
 class WebInterface
 {
-
   enum HandlerAction : int
   {
     NONE = 0,
@@ -33,7 +33,6 @@ class WebInterface
      * Private 
      */
 
-
   private:
     /**
      * Private Methods
@@ -47,15 +46,6 @@ class WebInterface
     
     /** Create routes */
     void CreateRoutes();
-
-    /** Clear EEPROM */
-    void ClearEEPROM();
-
-    /** Save to EEPROM */
-    void SaveNetworkData(const WMNetwork& network_data);
-
-    /** Save to EEPROM */
-    void GetNetworkData(WMNetwork& network_data);
 
     /** Save to static scan network method */
     void Scan(bool force = false);
@@ -77,23 +67,4 @@ inline WebInterface* WebInterface::GetInstance()
     instance = new WebInterface();
   }
   return instance;
-}
-
-inline void WebInterface::ClearEEPROM()
-{
-  for (int i = 0; i < 512; ++i) {
-    EEPROM.write(i, 0);
-  }
-  EEPROM.commit();
-}
-
-inline void WebInterface::SaveNetworkData(const WMNetwork& network_data)
-{
-  EEPROM.put(0, network_data);
-  EEPROM.commit();
-}
-
-inline void WebInterface::GetNetworkData(WMNetwork& network_data)
-{
-  EEPROM.get(0, network_data);
 }
