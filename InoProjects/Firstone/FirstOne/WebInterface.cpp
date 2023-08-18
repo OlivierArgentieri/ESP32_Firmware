@@ -27,8 +27,7 @@ void WebInterface::Setup(HardwareSerial& Serial)
       String content;
       CreateWebUI(content);      
       IPAddress ip = WiFi.softAPIP();
-      Serial.print("SoftAP IP: ");
-      Serial.println(WiFi.softAPIP());
+      LOG_DEBUG(String(WiFi.softAPIP()));
       request->send(200, "text/html", content);
     });
 
@@ -42,15 +41,11 @@ void WebInterface::Setup(HardwareSerial& Serial)
     {
       IPAddress ip = WiFi.softAPIP();
       
-      LOG_DEBUG("Trying to get data");
-
       WMNetworkData network_data;
       network_data.password = request->getParam(0)->value();
       network_data.ssid = request->getParam(1)->value();
-      
 
-      LOG_DEBUG(network_data.password);
-      LOG_DEBUG(network_data.ssid);
+      // Save data
       WMEEPROM::Save<WMNetworkData>(network_data, 0);
 
       request->send(200, "text/html", "OK");
@@ -66,7 +61,7 @@ void WebInterface::Handler(HardwareSerial& Serial)
 
     if (currentStatuts == HandlerAction::LISTNETWORKS)
     {
-    String aa;
+      String aa;
       CreateWebUI(aa);
       
     }

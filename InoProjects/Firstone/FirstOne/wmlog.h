@@ -118,7 +118,7 @@ inline void WMLog::Log(const String& message, LogLevel level)
   serial->print(WMLog::logLevelnames[level]);
   serial->print("] ");
 
-  // Print message
+  //Print message
   serial->println(message);
 
   // Reset color

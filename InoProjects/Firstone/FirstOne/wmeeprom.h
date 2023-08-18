@@ -25,8 +25,14 @@ class WMEEPROM {
     template<typename T>
     static void Get(T& object, int address)
     {
+      // Initialize EEPROM
+      EEPROM.begin(512);
+      
       // Read object from EEPROM
       EEPROM.get(address, object);
+
+      // End EEPROM
+      EEPROM.end();
     }
 
   private:
