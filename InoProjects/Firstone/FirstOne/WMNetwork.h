@@ -14,11 +14,6 @@ struct WMNetworkData
 
 class WMNetwork
 {
-public:
-  /**
-   * Contructor
-   */
-  
   
 public:
   /**
