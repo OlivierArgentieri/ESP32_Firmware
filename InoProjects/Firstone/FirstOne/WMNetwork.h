@@ -1,7 +1,8 @@
 #include <WString.h>
-#include "Component.h"
+#include <vector>
+#include <Wifi.h>
 
-#pragma pack(1)
+
 struct WMNetworkData
 {
   String ssid;
@@ -9,17 +10,15 @@ struct WMNetworkData
   String password;
   bool open;
 };
-#pragma pack(pop)
 
-class WMNetwork : WMComponent
+
+class WMNetwork
 {
 public:
   /**
    * Contructor
    */
   
-  /** Default constructor */
-  WMNetwork();
   
 public:
   /**
@@ -28,24 +27,27 @@ public:
 
   /** GetInstance */
   static WMNetwork& GetInstance() {
-    static WMNetwork instance(Serial);
+    static WMNetwork instance;
     return instance;
   }
 
   /** Scan network method */
   void Scan(bool force = false);
 
+  /** Get list of available networks */
+  void GetAvailableNetworks(std::vector<WMNetworkData>& outNetworks);
+
   private:
     /**
      * Private Property 
      */
-    inline static std::vector<WMNetwork> networksScanned;
+    std::vector<WMNetworkData> networksScanned;
 };
 
 /** inline */
-void WMNetworkComponent::Scan(bool force)
+inline void WMNetwork::Scan(bool force)
 {
-  if (!force && this->networksScanned.size() > 0)
+  if (!force && networksScanned.size() > 0)
     return;
 
   networksScanned.clear();
@@ -59,4 +61,9 @@ void WMNetworkComponent::Scan(bool force)
     network.open = WiFi.encryptionType(i) == WIFI_AUTH_OPEN;
     networksScanned.push_back(network);
   }
+}
+
+inline void WMNetwork::GetAvailableNetworks(std::vector<WMNetworkData>& outNetworks)
+{
+  outNetworks = networksScanned;
 }

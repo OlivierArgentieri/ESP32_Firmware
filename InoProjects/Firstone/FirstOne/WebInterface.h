@@ -1,7 +1,3 @@
-#include "WMNetwork.h"
-#include <vector>
-#include <EEPROM.h>
-
 class String;
 class HardwareSerial;
 class AsyncWebServer;
@@ -22,7 +18,7 @@ class WebInterface
     /** Get Instance */
     // TODO define macro for that
     static WebInterface& GetInstance() {
-      static WebInterface instance(Serial);
+      static WebInterface instance;
       return instance;
     }
     /** Server Setup */
@@ -44,8 +40,6 @@ class WebInterface
     
     /** Create routes */
     void CreateRoutes();
-
-    
   
   private:
     /**

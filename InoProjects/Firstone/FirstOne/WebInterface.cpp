@@ -1,9 +1,10 @@
 #include "WebInterface.h"
 #include <WebServer.h>
-#include <Wifi.h>
 #include <ESPAsyncWebServer.h>
-#include "wmeeprom.h"
-#include "wmlog.h"
+#include "WMEEPROM.h"
+#include "WMLog.h"
+#include "WMNetwork.h"
+#include <vector>
 
 WebInterface* WebInterface::instance = nullptr;
 AsyncWebServer* WebInterface::server = nullptr;
@@ -17,7 +18,7 @@ void WebInterface::Setup(HardwareSerial& Serial)
 { 
   // create specific class for that
   // Scan once
-  WMNetworkComponent::GetInstance().Scan();
+  WMNetwork::GetInstance().Scan();
   // Serve
   server = new AsyncWebServer(80);
   {
@@ -33,7 +34,7 @@ void WebInterface::Setup(HardwareSerial& Serial)
 
     server->on("/rescan", HTTP_GET, [&](AsyncWebServerRequest *request) 
     {
-      Scan(true);
+      WMNetwork::GetInstance().Scan(true);
       request->redirect("/");
     });
 
@@ -43,14 +44,14 @@ void WebInterface::Setup(HardwareSerial& Serial)
       
       LOG_DEBUG("Trying to get data");
 
-      WMNetwork network_data;
+      WMNetworkData network_data;
       network_data.password = request->getParam(0)->value();
       network_data.ssid = request->getParam(1)->value();
       
 
       LOG_DEBUG(network_data.password);
       LOG_DEBUG(network_data.ssid);
-      WMEEPROM::Save<WMNetwork>(network_data, 0);
+      WMEEPROM::Save<WMNetworkData>(network_data, 0);
 
       request->send(200, "text/html", "OK");
     });
@@ -95,9 +96,11 @@ void WebInterface::CreateWebUI(String& outContent)
   
   
   // Get available networks
-  //std::vector<WMNetwork> availableNetworks;
-  //GetAvailableNetworks(availableNetworks);
-  for (const WMNetwork& network: this->networksScanned)
+  std::vector<WMNetworkData> availableNetworks;
+  WMNetwork::GetInstance().GetAvailableNetworks(availableNetworks);
+
+  // Display available networks
+  for (const WMNetworkData& network: availableNetworks )
   {
     outContent += "<tr>";
 

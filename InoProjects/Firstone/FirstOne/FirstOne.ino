@@ -4,6 +4,7 @@
  */
 #include "WiFi.h"
 #include "WebInterface.h"
+#include "WMNetwork.h"
 #include "WMLog.h"
 #include "WMEEPROM.h"
 
@@ -15,7 +16,7 @@ void setup()
   WiFi.disconnect();
   delay(100);
   WiFi.softAP("AAAAAAAA", "");
-  WebInterface::GetInstance()->Setup(Serial);
+  WebInterface::GetInstance().Setup(Serial);
   LOG_DEBUG("setup done!");
 
   WMNetworkData network_data;
@@ -27,5 +28,5 @@ void setup()
  
 void loop()
 {
-  WebInterface::GetInstance()->Handler(Serial);
+  WebInterface::GetInstance().Handler(Serial);
 }

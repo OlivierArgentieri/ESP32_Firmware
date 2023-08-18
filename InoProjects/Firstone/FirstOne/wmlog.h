@@ -1,5 +1,4 @@
 #include <WString.h>
-#include "component.h"
 
 #define LOG(MSG, LVL) WMLog::GetInstance().Log(MSG, WMLog::LogLevel::LVL);
 #define LOG_INFO(MSG) WMLog::GetInstance().Log(MSG, WMLog::LogLevel::INFO);
@@ -9,7 +8,7 @@
 
 class HardwareSerial;
 
-class WMLog: public WMComponent
+class WMLog
 {
 public:
   /**

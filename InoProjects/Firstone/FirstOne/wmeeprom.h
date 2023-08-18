@@ -13,9 +13,6 @@ class WMEEPROM {
       // Initialize EEPROM
       EEPROM.begin(512);
 
-      // Clear EEPROM before writing
-      Clear();
-
       // Write object to EEPROM
       EEPROM.put(address, object);
       EEPROM.commit();
@@ -38,19 +35,14 @@ class WMEEPROM {
      */
 
     /** Clear EEPROM */
-    static void Clear():
-    {
-      for (int i = 0 ; i < EEPROM.length() ; i++) {
-        EEPROM.write(i, 0);
-      }
-      EEPROM.commit();
-    }
+    static void Clear();
 };
 
 /** Inline */
-inline static void Clear():
+inline static void Clear()
 {
-  for (int i = 0 ; i < EEPROM.length() ; i++) {
+  for (int i = 0 ; i < EEPROM.length() ; i++) 
+  {
     EEPROM.write(i, 0);
   }
   EEPROM.commit();
