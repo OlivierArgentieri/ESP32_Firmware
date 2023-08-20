@@ -25,8 +25,6 @@ void WebInterface::Setup(HardwareSerial& Serial)
     {
       String content;
       CreateWebUI(content);      
-      IPAddress ip = WiFi.softAPIP();
-      LOG_DEBUG(String(WiFi.softAPIP()));
       request->send(200, "text/html", content);
     });
 

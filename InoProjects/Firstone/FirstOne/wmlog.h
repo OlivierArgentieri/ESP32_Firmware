@@ -1,10 +1,13 @@
 #include <WString.h>
 
+#ifndef WMLOG_H
+#define WMLOG_H
 #define LOG(MSG, LVL) WMLog::GetInstance().Log(MSG, WMLog::LogLevel::LVL);
 #define LOG_INFO(MSG) WMLog::GetInstance().Log(MSG, WMLog::LogLevel::INFO);
 #define LOG_DEBUG(MSG) WMLog::GetInstance().Log(MSG, WMLog::LogLevel::DEBUG);
 #define LOG_WARNING(MSG) WMLog::GetInstance().Log(MSG, WMLog::LogLevel::WARNING);
 #define LOG_ERROR(MSG) WMLog::GetInstance().Log(MSG, WMLog::LogLevel::ERROR);
+#endif // WMLOG_H
 
 class HardwareSerial;
 

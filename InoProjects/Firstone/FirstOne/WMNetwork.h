@@ -2,7 +2,6 @@
 #include <vector>
 #include <Wifi.h>
 
-
 struct WMNetworkData
 {
   String ssid;
@@ -29,6 +28,9 @@ public:
 
   /** Get list of available networks */
   void GetAvailableNetworks(std::vector<WMNetworkData>& outNetworks);
+
+  /** isValidConnection ?*/
+  bool isValidConnection(const WMNetworkData& network);
 
   private:
     /**
@@ -59,4 +61,17 @@ inline void WMNetwork::Scan(bool force)
 inline void WMNetwork::GetAvailableNetworks(std::vector<WMNetworkData>& outNetworks)
 {
   outNetworks = networksScanned;
+}
+
+inline bool WMNetwork::isValidConnection(const WMNetworkData& network)
+{
+  WiFi.begin(network.ssid, network.password);
+  int timeout = 10;
+  while (WiFi.status() != WL_CONNECTED && timeout > 0)
+  {
+    timeout--;
+    delay(1000);
+  }
+
+  return WiFi.status() == WL_CONNECTED;
 }
