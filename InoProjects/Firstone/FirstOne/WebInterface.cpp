@@ -13,7 +13,6 @@ AsyncWebServer* WebInterface::server = nullptr;
 * Public Methods
 */
 
-
 void WebInterface::Setup(HardwareSerial& Serial)
 { 
   // create specific class for that

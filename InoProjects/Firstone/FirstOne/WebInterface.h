@@ -52,4 +52,3 @@ class WebInterface
     static AsyncWebServer* server;
     HandlerAction currentStatuts = HandlerAction::NONE;
 };
-

@@ -11,10 +11,8 @@ struct WMNetworkData
   bool open;
 };
 
-
 class WMNetwork
 {
-  
 public:
   /**
    * Public Methods
