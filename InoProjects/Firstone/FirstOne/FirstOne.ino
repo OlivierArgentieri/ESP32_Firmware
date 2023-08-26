@@ -8,15 +8,13 @@ void setup()
 {
   Serial.begin(115200);
   WiFi.mode(WIFI_AP_STA); /*ESP32 Access point configured*/
-
-
   delay(100);
   WiFi.softAP("AAAAAAAA", "");
   WebInterface::GetInstance().Setup(Serial);
   LOG_DEBUG("setup done!");
-  Serial.println(WiFi.softAPIP()); 
+  
   IPAddress ip = WiFi.softAPIP();
-  LOG_DEBUG(String(WiFi.softAPIP()));
+  LOG_DEBUG(WiFi.softAPIP().toString());
 
   WMNetworkData network_data;
   WMEEPROM::Get<WMNetworkData>(network_data, 0);
@@ -27,8 +25,8 @@ void setup()
   bool validConnection = WMNetwork::GetInstance().isValidConnection(network_data);
   if (validConnection)
   {
-    LOG_INFO("Connected to " + network_data.ssid);
-    Serial.println(WiFi.localIP());
+    LOG_INFO("Connected to " + network_data.ssid);    
+    LOG_INFO(WiFi.localIP().toString());
   }
 }
 
