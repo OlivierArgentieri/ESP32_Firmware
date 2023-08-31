@@ -15,9 +15,9 @@ AsyncWebServer* WebInterface::server = nullptr;
 
 void WebInterface::Setup(HardwareSerial& Serial)
 { 
-  // create specific class for that
   // Scan once
   WMNetwork::GetInstance().Scan();
+
   // Serve
   server = new AsyncWebServer(80);
   {
@@ -36,16 +36,13 @@ void WebInterface::Setup(HardwareSerial& Serial)
 
     server->on("/connect", HTTP_POST, [&](AsyncWebServerRequest *request) 
     {
-      IPAddress ip = WiFi.softAPIP();
-      
       WMNetworkData network_data;
       network_data.password = request->getParam(0)->value();
       network_data.ssid = request->getParam(1)->value();
 
       // Save data
       WMEEPROM::Save<WMNetworkData>(network_data, 0);
-
-      request->send(200, "text/html", "OK");
+      request->send(200, "text/html", "Password saved, please reboot...");
     });
   }
   server->begin(); 
@@ -60,7 +57,6 @@ void WebInterface::Handler(HardwareSerial& Serial)
     {
       String aa;
       CreateWebUI(aa);
-      
     }
 }
 /**

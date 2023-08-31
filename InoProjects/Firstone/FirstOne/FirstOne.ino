@@ -3,6 +3,7 @@
 #include "WMNetwork.h"
 #include "WMEEPROM.h"
 #include "WMLog.h"
+#include "WMOLED.h"
 
 void setup()
 {
@@ -28,6 +29,8 @@ void setup()
     LOG_INFO("Connected to " + network_data.ssid);    
     LOG_INFO(WiFi.localIP().toString());
   }
+
+  WMOLED::GetInstance().Setup();
 }
 
 void loop()

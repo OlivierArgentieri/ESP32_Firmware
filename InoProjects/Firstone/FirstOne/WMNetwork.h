@@ -2,8 +2,21 @@
 #include <vector>
 #include <Wifi.h>
 
+struct WNIPAddress
+{
+  uint first;
+  uint second;
+  uint third;
+  uint fourth;
+};
+
 struct WMNetworkData
 {
+  WNIPAddress localIP;
+  WNIPAddress subnet;
+  WNIPAddress gateway;
+  WNIPAddress firstDNS;
+  WNIPAddress secondaryDNS;
   String ssid;
   String rssi;
   String password;
