@@ -10,8 +10,14 @@ After that, we can iterate on other custom things on esp32 easily.
 
 ## Hardware
 Tested on:
-- ESP32-S series
+- ESP32-S
+- ESP-WROOM-32
+
+## Pictures
+![ESP32S](https://github.com/OlivierArgentieri/ESP32_Firmware/blob/main/img/ESP32S.jpg)
+
+![ESP-WROOM-32-oled](https://github.com/OlivierArgentieri/ESP32_Firmware/blob/main/img/ESP-WROOM-32-oled.jpg)
 
 ## Actual Size
-Sketch uses 728330 bytes (55%) of program storage space. Maximum is 1310720 bytes.
-Global variables use 38416 bytes (11%) of dynamic memory, leaving 289264 bytes for local variables. Maximum is 327680 bytes.
+Sketch uses 802953 bytes (61%) of program storage space. Maximum is 1310720 bytes.
+Global variables use 43200 bytes (13%) of dynamic memory, leaving 284480 bytes for local variables. Maximum is 327680 bytes.
