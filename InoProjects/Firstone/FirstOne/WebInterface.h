@@ -1,5 +1,4 @@
 class String;
-class HardwareSerial;
 class AsyncWebServer;
 
 class WebInterface
@@ -23,10 +22,10 @@ class WebInterface
     }
     
     /** Server Setup */
-    void Setup(HardwareSerial& Serial);
+    void Setup();
 
     /** Handle Route Behaviour */
-    void Handler(HardwareSerial& Serial);
+    void Handler();
 
   private:
     /**
@@ -48,7 +47,7 @@ class WebInterface
     /**
     * private property 
     */
-    static WebInterface* instance;
-    static AsyncWebServer* server;
+    static inline WebInterface* instance = nullptr;
+    static inline AsyncWebServer* server = nullptr;
     HandlerAction currentStatuts = HandlerAction::NONE;
 };

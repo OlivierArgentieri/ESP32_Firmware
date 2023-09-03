@@ -11,7 +11,7 @@ void setup()
   WiFi.mode(WIFI_AP_STA); /*ESP32 Access point configured*/
   delay(100);
   WiFi.softAP("AAAAAAAA", "");
-  WebInterface::GetInstance().Setup(Serial);
+  WebInterface::GetInstance().Setup();
   LOG_DEBUG("setup done!");
   
   IPAddress ip = WiFi.softAPIP();
@@ -41,5 +41,5 @@ void setup()
 
 void loop()
 {
-  WebInterface::GetInstance().Handler(Serial);
+  WebInterface::GetInstance().Handler();
 }

@@ -1,4 +1,5 @@
 #include <WString.h>
+#include <HardwareSerial.h>
 
 #ifndef WMLOG_H
 #define WMLOG_H
@@ -8,8 +9,6 @@
 #define LOG_WARNING(MSG) WMLog::GetInstance().Log(MSG, WMLog::LogLevel::WARNING);
 #define LOG_ERROR(MSG) WMLog::GetInstance().Log(MSG, WMLog::LogLevel::ERROR);
 #endif // WMLOG_H
-
-class HardwareSerial;
 
 class WMLog
 {

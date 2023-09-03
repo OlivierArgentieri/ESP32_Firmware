@@ -27,6 +27,6 @@ class WMOLED
     /**
       * private property 
       */ 
-    static WMOLED* instance;
-    Adafruit_SSD1306* display;
+    static inline WMOLED* instance = nullptr;
+    static inline Adafruit_SSD1306* display = nullptr;
 };

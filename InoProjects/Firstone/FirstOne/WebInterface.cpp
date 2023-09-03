@@ -6,14 +6,11 @@
 #include "WMNetwork.h"
 #include <vector>
 
-WebInterface* WebInterface::instance = nullptr;
-AsyncWebServer* WebInterface::server = nullptr;
-
 /**
 * Public Methods
 */
 
-void WebInterface::Setup(HardwareSerial& Serial)
+void WebInterface::Setup()
 { 
   // Scan once
   WMNetwork::GetInstance().Scan();
@@ -48,7 +45,7 @@ void WebInterface::Setup(HardwareSerial& Serial)
   server->begin(); 
 }
 
-void WebInterface::Handler(HardwareSerial& Serial)
+void WebInterface::Handler()
 {
     if (currentStatuts == HandlerAction::NONE)
       return;  
