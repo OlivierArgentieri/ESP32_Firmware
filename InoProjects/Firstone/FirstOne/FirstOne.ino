@@ -23,14 +23,20 @@ void setup()
   LOG_INFO(network_data.password);
   LOG_INFO(network_data.ssid);
 
+  WMOLED::GetInstance().Setup();
+
   bool validConnection = WMNetwork::GetInstance().isValidConnection(network_data);
   if (validConnection)
   {
     LOG_INFO("Connected to " + network_data.ssid);    
     LOG_INFO(WiFi.localIP().toString());
+    WMOLED::GetInstance().DisplayMessage(WiFi.localIP().toString());
+  }
+  else
+  {
+    WMOLED::GetInstance().DisplayMessage("AP IP: " + WiFi.softAPIP().toString());
   }
 
-  WMOLED::GetInstance().Setup();
 }
 
 void loop()
