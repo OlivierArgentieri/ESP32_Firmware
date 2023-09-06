@@ -5,5 +5,10 @@
     "board/esp32-bridge.cfg"
   ],
   "idf.flashType": "UART",
-  "idf.portWin": "COM7"
+  "idf.portWin": "COM7",
+  "files.associations": {
+    "esp_wifi.h": "c",
+    "sys.h": "c",
+    "err.h": "c"
+  }
 }
