@@ -9,6 +9,7 @@
   "files.associations": {
     "esp_wifi.h": "c",
     "sys.h": "c",
-    "err.h": "c"
+    "err.h": "c",
+    "task.h": "c"
   }
 }
