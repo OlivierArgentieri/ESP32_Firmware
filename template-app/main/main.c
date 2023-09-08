@@ -11,7 +11,7 @@
 #include "lwip/sys.h"
 
 
-static const char *TAG = "wifi softAP";\
+static const char *TAG = "wifi softAP";
 static void wifi_event_handler(void* arg, esp_event_base_t event_base,
                                     int32_t event_id, void* event_data)
 {
@@ -23,7 +23,8 @@ static void wifi_event_handler(void* arg, esp_event_base_t event_base,
         wifi_event_ap_stadisconnected_t* event = (wifi_event_ap_stadisconnected_t*) event_data;
         ESP_LOGI(TAG, "station "MACSTR" leave, AID=%d",
                  MAC2STR(event->mac), event->aid);
-    }
+    } 
+
 }
 void init_log(void)
 {
@@ -56,6 +57,11 @@ void init_nvs(void)
   }
 }
 
+static void ip_event_handler(void *arg, esp_event_base_t event_base, int32_t event_id, void *event_data) {
+    ESP_LOGI(TAG, "set ip: " IPSTR, IP2STR(&(((ip_event_ap_staipassigned_t *)event_data)->ip)));
+
+}
+
 void init_soft_ap(void)
 {
   ESP_ERROR_CHECK(esp_netif_init());
@@ -72,6 +78,8 @@ void init_soft_ap(void)
     NULL,
     NULL)
   );
+  ESP_ERROR_CHECK(esp_event_handler_register(IP_EVENT, IP_EVENT_AP_STAIPASSIGNED, &ip_event_handler, NULL));
+
 
   wifi_config_t wifi_config = {
         .ap = {
@@ -97,6 +105,7 @@ void init_soft_ap(void)
     ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_AP));
     ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_AP, &wifi_config));
     ESP_ERROR_CHECK(esp_wifi_start());
+
 
 }
 
