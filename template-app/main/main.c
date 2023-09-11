@@ -11,6 +11,8 @@
 #include "esp_netif.h"
 #include "esp_http_server.h"
 
+#include "components/web_server.h"
+
 static const char *TAG = "wifi softAP";
 static const char* html_content = "<html><body><h1>Hello, ESP32!</h1></body></html>";
 

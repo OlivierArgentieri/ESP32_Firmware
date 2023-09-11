@@ -1,8 +1,7 @@
 #pragma once
+#include "interfaces/component.h"
 
-#include "component.h"
-
-class WebServer : public IComponent {
+struct WebServer: public IComponent{
 
 public:
   /**
@@ -19,6 +18,12 @@ public:
      * public virtual methods
      */
     void init() override;
+
+  private:
+    /**
+     * private methods
+     */
+    void CreateWebUI(char* outContent);
 };
 
 

@@ -1,6 +1,6 @@
+#pragma once
 
-
-class IComponent
+struct IComponent
 {
 public:
   /**
