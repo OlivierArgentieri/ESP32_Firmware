@@ -14,19 +14,6 @@
 #include "components/web_server.h"
 
 static const char *TAG = "wifi softAP";
-static const char* html_content = "<html><body><h1>Hello, ESP32!</h1></body></html>";
-
-static esp_err_t root_handler(httpd_req_t *req) {
-    httpd_resp_send(req, html_content, HTTPD_RESP_USE_STRLEN);
-    return ESP_OK;
-}
-
-static const httpd_uri_t root_uri = {
-    .uri       = "/",
-    .method    = HTTP_GET,
-    .handler   = root_handler,
-    .user_ctx  = NULL
-};
 
 static void wifi_event_handler(void* arg, esp_event_base_t event_base,
                                     int32_t event_id, void* event_data)
@@ -123,14 +110,6 @@ void init_soft_ap(void)
   ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_AP));
   ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_AP, &wifi_config));
   ESP_ERROR_CHECK(esp_wifi_start());
-}
-
-void init_http_server(void){
-  httpd_config_t config = HTTPD_DEFAULT_CONFIG();
-  httpd_handle_t server = NULL;
-  if (httpd_start(&server, &config) == ESP_OK) {
-    httpd_register_uri_handler(server, &root_uri);
-  }
 }
 
 void app_main(void)
