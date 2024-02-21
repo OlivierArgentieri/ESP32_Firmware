@@ -8,7 +8,6 @@
 #define LOG_DEBUG(MSG) WMLog::GetInstance().Log(MSG, WMLog::LogLevel::DEBUG);
 #define LOG_WARNING(MSG) WMLog::GetInstance().Log(MSG, WMLog::LogLevel::WARNING);
 #define LOG_ERROR(MSG) WMLog::GetInstance().Log(MSG, WMLog::LogLevel::ERROR);
-#endif // WMLOG_H
 
 class WMLog
 {
@@ -126,3 +125,4 @@ inline void WMLog::Log(const String& message, LogLevel level)
   // Reset color
   serial->print("\033[0m");
 }
+#endif // WMLOG_H
