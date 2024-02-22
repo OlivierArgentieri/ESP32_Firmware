@@ -1,6 +1,7 @@
 #include <WString.h>
 #include <vector>
 #include <Wifi.h>
+#include "WMLog.h"
 
 struct WNIPAddress
 {
@@ -12,15 +13,58 @@ struct WNIPAddress
 
 struct WMNetworkData
 {
-  WNIPAddress localIP;
-  WNIPAddress subnet;
-  WNIPAddress gateway;
-  WNIPAddress firstDNS;
-  WNIPAddress secondaryDNS;
+  IPAddress localIP;
+  IPAddress mask;
+  IPAddress gateway;
+  IPAddress firstDNS;
+  IPAddress secondaryDNS;
   String ssid;
-  String rssi;
   String password;
+  String rssi;
   bool open;
+
+  WMNetworkData()
+  {
+    localIP = IPAddress(0, 0, 0, 0);
+    mask = IPAddress(0, 0, 0, 0);
+    gateway = IPAddress(0, 0, 0, 0);
+    firstDNS = IPAddress(0, 0, 0, 0);
+    secondaryDNS = IPAddress(0, 0, 0, 0);
+    ssid = "";
+    rssi = "";
+    password = "";
+    open = false;
+  }
+
+  WMNetworkData(
+    const String local_ip,
+    const String mask,
+    const String gateway,
+    const String first_dns,
+    const String second_dns,
+    const String ssid,
+    const String password,
+    const String rssi,
+    bool open
+    )
+  {
+    this->localIP.fromString(local_ip);
+    this->mask.fromString(mask);
+    this->gateway.fromString(gateway);
+    this->firstDNS.fromString(first_dns);
+    this->secondaryDNS.fromString(second_dns);
+    this->ssid = ssid;
+    this->password = password;
+    this->rssi = rssi;
+    this->open = open;
+  }
+
+  // is_static_configured
+  bool isStaticConfigured() const
+  {
+    return localIP != IPAddress(0, 0, 0, 0) && mask != IPAddress(0, 0, 0, 0) && gateway != IPAddress(0, 0, 0, 0);
+  }
+  
 };
 
 class WMNetwork
@@ -78,7 +122,21 @@ inline void WMNetwork::GetAvailableNetworks(std::vector<WMNetworkData>& outNetwo
 
 inline bool WMNetwork::isValidConnection(const WMNetworkData& network)
 {
+
+  if(network.isStaticConfigured())
+  {
+    if (!WiFi.config(network.localIP, network.gateway, network.mask))
+    {
+      LOG_ERROR("Failed to configure static IP");
+      return false;
+    }
+  }
+  
+  // TODO set hostname in struct
+  WiFi.setHostname("COUCOU");
+
   WiFi.begin(network.ssid, network.password);
+
   int timeout = 10;
   while (WiFi.status() != WL_CONNECTED && timeout > 0)
   {

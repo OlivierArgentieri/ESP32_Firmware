@@ -31,11 +31,27 @@ void WebInterface::Setup()
       request->redirect("/");
     });
 
+    server->on("/reset", HTTP_GET, [&](AsyncWebServerRequest *request) 
+    {
+      LOG_WARNING("EEPROM is corrupted, saved default network data");
+      WMNetworkData network_data;
+      WMEEPROM::Save<WMNetworkData>(network_data, 0);
+    });
+
     server->on("/connect", HTTP_POST, [&](AsyncWebServerRequest *request) 
     {
-      WMNetworkData network_data;
-      network_data.password = request->getParam(0)->value();
-      network_data.ssid = request->getParam(1)->value();
+      WMNetworkData network_data{
+        request->getParam(2)->value(), // ip
+        request->getParam(3)->value(), // mask
+        request->getParam(4)->value(), // gateway
+        "", // first_dns
+        "", // second_dns
+        request->getParam(1)->value(), // ssid
+        request->getParam(0)->value(), // password
+        "", // rssi
+        false // open
+      };
+
 
       // Save data
       WMEEPROM::Save<WMNetworkData>(network_data, 0);
@@ -104,8 +120,11 @@ void WebInterface::CreateWebUI(String& outContent)
     outContent += "<td>";
     outContent += "<form action='/connect' method='post'>";
     
-    if (!network.open) outContent += "<input type='text' name='password' placeholder='password'>";
+    outContent += "<input type='text' name='password' placeholder='password'>";
     outContent += "<input type='text' name='ssid' value='" + network.ssid + "'>";
+    outContent += "<input type='text' name='ip' placeholder='ipaddr'>";
+    outContent += "<input type='text' name='mask' placeholder='mask'>";
+    outContent += "<input type='text' name='gateway' placeholder='gateway'>";
     outContent += "<input type='submit' value='Connect'>";
     outContent += "</form>";
 

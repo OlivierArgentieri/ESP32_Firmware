@@ -35,6 +35,25 @@ class WMEEPROM {
       EEPROM.end();
     }
 
+    /** Check corrupted data */
+    template<typename T>
+    static bool IsCorrupted(int address)
+    {
+      // Initialize EEPROM
+      EEPROM.begin(512);
+
+      // Read object from EEPROM
+      T object;
+      EEPROM.get(address, object);
+
+      // End EEPROM
+      EEPROM.end();
+
+      // check if object is corrupted based on its size
+      
+      return sizeof(object) != sizeof(T);
+    }
+
   private:
     /**
      * Private Methods
