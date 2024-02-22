@@ -40,17 +40,17 @@ void WebInterface::Setup()
 
     server->on("/connect", HTTP_POST, [&](AsyncWebServerRequest *request) 
     {
-      WMNetworkData network_data(
-        request->getParam(2)->value(),
-        request->getParam(3)->value(),
-        request->getParam(4)->value(),
-        "",
-        "",
-        request->getParam(0)->value(),
-        request->getParam(1)->value(),
-        "",
-        false
-      );
+      WMNetworkData network_data{
+        request->getParam(2)->value(), // ip
+        request->getParam(3)->value(), // mask
+        request->getParam(4)->value(), // gateway
+        "", // first_dns
+        "", // second_dns
+        request->getParam(1)->value(), // ssid
+        request->getParam(0)->value(), // password
+        "", // rssi
+        false // open
+      };
 
 
       // Save data

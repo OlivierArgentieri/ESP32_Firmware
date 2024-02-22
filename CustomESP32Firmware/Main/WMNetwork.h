@@ -18,8 +18,8 @@ struct WMNetworkData
   IPAddress gateway;
   IPAddress firstDNS;
   IPAddress secondaryDNS;
-  String password;
   String ssid;
+  String password;
   String rssi;
   bool open;
 
@@ -36,7 +36,17 @@ struct WMNetworkData
     open = false;
   }
 
-  WMNetworkData(const String local_ip, const String mask, const String gateway, const String first_dns, const String second_dns, const String ssid, const String rssi, const String password, bool open)
+  WMNetworkData(
+    const String local_ip,
+    const String mask,
+    const String gateway,
+    const String first_dns,
+    const String second_dns,
+    const String ssid,
+    const String password,
+    const String rssi,
+    bool open
+    )
   {
     this->localIP.fromString(local_ip);
     this->mask.fromString(mask);
@@ -44,8 +54,8 @@ struct WMNetworkData
     this->firstDNS.fromString(first_dns);
     this->secondaryDNS.fromString(second_dns);
     this->ssid = ssid;
-    this->rssi = rssi;
     this->password = password;
+    this->rssi = rssi;
     this->open = open;
   }
 
@@ -112,19 +122,17 @@ inline void WMNetwork::GetAvailableNetworks(std::vector<WMNetworkData>& outNetwo
 
 inline bool WMNetwork::isValidConnection(const WMNetworkData& network)
 {
+
   if(network.isStaticConfigured())
   {
-    LOG_INFO(network.password);
-    LOG_INFO(network.ssid);
-    LOG_INFO(network.localIP.toString());
-    LOG_INFO(network.mask.toString());
-    LOG_INFO(network.gateway.toString());
     if (!WiFi.config(network.localIP, network.gateway, network.mask))
     {
       LOG_ERROR("Failed to configure static IP");
       return false;
     }
   }
+  
+  // TODO set hostname in struct
   WiFi.setHostname("COUCOU");
 
   WiFi.begin(network.ssid, network.password);
