@@ -5,6 +5,7 @@
 #include <vector>
 #include <Wifi.h>
 #include "WMLog.h"
+#define DELAY(ms) for (unsigned long i = 0; i < ms; i++) { __asm("nop"); }
 
 struct WNIPAddress
 {
@@ -144,7 +145,7 @@ inline bool WMNetwork::isValidConnection(const WMNetworkData& network)
   while (WiFi.status() != WL_CONNECTED && timeout > 0)
   {
     timeout--;
-    delay(1000);
+    DELAY(1000);
   }
 
   return WiFi.status() == WL_CONNECTED;

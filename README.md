@@ -19,5 +19,5 @@ Tested on:
 ![ESP-WROOM-32-oled](https://github.com/OlivierArgentieri/ESP32_Firmware/blob/main/img/ESP-WROOM-32-oled.jpg)
 
 ## Actual Size
-Sketch uses 802953 bytes (61%) of program storage space. Maximum is 1310720 bytes.
-Global variables use 43200 bytes (13%) of dynamic memory, leaving 284480 bytes for local variables. Maximum is 327680 bytes.
+Sketch uses 760349 bytes (58%) of program storage space. Maximum is 1310720 bytes.
+Global variables use 43136 bytes (13%) of dynamic memory, leaving 284544 bytes for local variables. Maximum is 327680 bytes.
