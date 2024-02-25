@@ -1,3 +1,6 @@
+#ifndef WMEEPROM_H
+#define WMEEPROM_H
+
 #include <EEPROM.h>
 
 class WMEEPROM {
@@ -72,3 +75,5 @@ inline static void Clear()
   }
   EEPROM.commit();
 }
+
+#endif

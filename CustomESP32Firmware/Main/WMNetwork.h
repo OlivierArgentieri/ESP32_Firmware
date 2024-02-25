@@ -1,3 +1,6 @@
+#ifndef WM_NETWORK_H
+#define WM_NETWORK_H
+
 #include <WString.h>
 #include <vector>
 #include <Wifi.h>
@@ -146,3 +149,4 @@ inline bool WMNetwork::isValidConnection(const WMNetworkData& network)
 
   return WiFi.status() == WL_CONNECTED;
 }
+#endif

@@ -1,3 +1,6 @@
+#ifndef WEBINTERFACE_H
+#define WEBINTERFACE_H
+
 class String;
 class AsyncWebServer;
 
@@ -51,3 +54,4 @@ class WebInterface
     static inline AsyncWebServer* server = nullptr;
     HandlerAction currentStatuts = HandlerAction::NONE;
 };
+#endif
