@@ -18,6 +18,14 @@ Tested on:
 
 ![ESP-WROOM-32-oled](https://github.com/OlivierArgentieri/ESP32_Firmware/blob/main/img/ESP-WROOM-32-oled.jpg)
 
+## Dependencies
+
+`https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json`
+
+- asyncTCP
+- ESPAsyncWebServer
+- ESPSoftwareSerial
+
 ## Actual Size
 Sketch uses 760349 bytes (58%) of program storage space. Maximum is 1310720 bytes.
 Global variables use 43136 bytes (13%) of dynamic memory, leaving 284544 bytes for local variables. Maximum is 327680 bytes.
